@@ -676,6 +676,7 @@ namespace AssetStudioGUI
         {
             try
             {
+                StatusStripUpdate($"PathID {assetItem.Asset.m_PathID}");
                 switch (assetItem.Asset)
                 {
                     case Texture2D m_Texture2D:
@@ -686,6 +687,9 @@ namespace AssetStudioGUI
                         break;
                     case Shader m_Shader:
                         PreviewShader(m_Shader);
+                        break;
+                    case Material m_Material:
+                        PreviewMaterial(m_Material);
                         break;
                     case TextAsset m_TextAsset:
                         PreviewTextAsset(m_TextAsset);
@@ -814,7 +818,7 @@ namespace AssetStudioGUI
                 }
                 PreviewTexture(bitmap);
 
-                StatusStripUpdate("'Ctrl'+'R'/'G'/'B'/'A' for Channel Toggle");
+                StatusStripUpdate("'Ctrl'+'R'/'G'/'B'/'A' for Channel Toggle "+" FileID:"+ assetItem.Asset.m_PathID.ToString());
             }
             else
             {
@@ -948,7 +952,11 @@ namespace AssetStudioGUI
             var str = ShaderConverter.Convert(m_Shader);
             PreviewText(str == null ? "Serialized Shader can't be read" : str.Replace("\n", "\r\n"));
         }
-
+        private void PreviewMaterial(Material m_Material)
+        {
+            var str = m_Material.toMaterialFile();
+            PreviewText(str == null ? "Material File can't be read" : str.Replace("\n", "\r\n"));
+        }
         private void PreviewTextAsset(TextAsset m_TextAsset)
         {
             var text = Encoding.UTF8.GetString(m_TextAsset.m_Script);
